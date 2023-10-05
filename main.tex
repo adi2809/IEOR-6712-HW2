@@ -128,5 +128,13 @@ The second highlighted term is zero, as $P(X_i > e) = 1$, which suggests that $P
     \end{split}
 \end{equation}
 From \ref{G9}, it suffices to show that as $n \rightarrow \infty$, $\mu_n \rightarrow \infty$, which we can do using  \ref{G8} as follows: 
+\begin{equation}
+    \label{G10}
+    \begin{split}
+        \lim_{n\rightarrow \infty} \mu_n &= \lim_{n\rightarrow \infty}\int_{e}^{n} \frac{e}{x \ln{x}} dx\\\\
+        &= \lim_{n\rightarrow \infty} \ln{(\ln{n})}\\
+        &= \infty
+    \end{split}
+\end{equation}
 \printbibliography
 \end{document}
