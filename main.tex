@@ -18,12 +18,115 @@
 %%\patchcmd{}{}
 %% \begin{verbatim}[frame=single, numbers=left] 
 %%\end{verbatim}
+%% {\color{red} .... random text ......}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\newtcbtheorem{theo}%
+ {Theorem}{}{theorem}
+\usepackage{siunitx}
+\usepackage{setspace}
+\usepackage{chngcntr}
+\usepackage{biblatex}
+\counterwithin{equation}{section}
+%%% \textbf{}, textit{}, \underline 
+%%% \begin{equation} \end{equation} -> numbered equation 
+%%% add \label{----} -> \ref{label}, when you want to reference an equation. 
+%%% \begin{align}\end{align}
+%%% \begin{split}\end{split}
+%%% multi-line  -> \begin{multline} \\ \end{multline}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\indexset}[1]{[#1]}
+\newcommand{\bracket}[1]{\left(#1\right)}
+\newcommand{\highlight}[1]{%
+  \colorbox{red!20}{$\displaystyle#1$}}
+\newcommand{\abs}[1]{\vert \, #1 \, \vert}
+\newcommand{\magn}[1]{\vert\vert \, #1 \, \vert\vert}
+\addbibresource{citations.bib}
 \title{Assignment 2}
 \date{October 2023}
 
 \begin{document}
 
-\section{Intro}
-
-
+\section{Problem 1}
+$L^2$ weak-law for uncorrelated random variables $X_1, \dots, X_n$, with a finite mean ($\mu$) and variance ($\sigma^2$), can be extended to:
+\begin{equation}
+    \label{G0}
+    \bracket{\frac{\sum_{i \in \indexset{n}} X_i}{n}} \xrightarrow{L^2} \mu  \implies \bracket{\frac{\sum_{i \in \indexset{n}} X_i}{n}} \xrightarrow{p} \mu
+\end{equation}
+\\
+It is given that the expectation of the product of two random variables $X_i$ and $X_j$ such that $i > j$ can be bounded above by $r(i-j)$, which can be mathematically stated as: 
+\begin{equation}
+    \label{G1}
+    E[X_i X_j] \leq r(i-j) \, \, \, \, \, \forall i \geq  j 
+\end{equation}
+\\
+For our case as $\mu = E[X_i] = 0$, we focus on showing that the variance is also bounded and finite. To show this we can substitute $j = i$ in \ref{G1}, to obtain the following form: 
+\begin{equation}
+    \begin{array}{rl}
+         \text{Var}(X_i) &= E[X_i^2] - E[X_i]^2 \\
+                         &= E[X_i^2]\\
+                         &\leq r(0)
+    \end{array}   
+\end{equation}\\
+\textbf{Note:} We have not explicitly stated that $r(.)$ needs to be finite at point $k=0$, but this assumption needs to be made to bound the variance. Hence we proceed with the same assumption. Moreover, using the Cauchy-Schwarz inequality in the expectation form we can write the following: 
+\begin{equation}
+    \label{G3}
+    \begin{array}{rrl}
+        & E[X_i X_j] &\leq \bracket{E[X_i^2] E[X_j^2]}^{\frac{1}{2}} \\ 
+        \implies& E[X_i X_j] &\leq \vert r(0) \vert\\
+    \end{array}
+\end{equation}\\
+We are given that $r(n) \rightarrow 0$ as $n \rightarrow \infty$, and by the definition of limit we have $\exists N : \, \, \forall n \geq N \,\,\,  \vert r(n)\vert \leq \epsilon $, for every choice of $\epsilon > 0$. We now try to use the $L^2-$weak law:
+\begin{equation}
+    \label{G4}
+    \begin{split}
+        E\left[ \frac{S_n^2}{n^2}\right] &= E\left[ \frac{\bracket{X_1+X_2+\dots+X_n}^2}{n^2}\right]\\
+        &=  E\left[ \frac{\sum_{i} X_i^2 + 2 \sum_{j<i} X_j X_i}{n^2}\right]\\
+        &\leq \frac{1}{n^2} \bracket{nr(0) + 2 \highlight{\sum_{j<i} E[X_j X_i]}}
+    \end{split}
+\end{equation}
+We now need to bound the highlighted summation using \ref{G1}, \ref{G3} repeatedly as follows (here we consider $n \geq N$): 
+\begin{equation}
+    \label{G6}
+    \begin{split}
+        \sum_{j<i} E[X_j X_i] & = \sum_{k=1}^{n} \sum_{j=1}^{n-k} E[X_j X_{j+k}]\\
+        &\leq \bracket{ \sum_{k=1}^{N-1}(n-k)r(0) + \sum_{k=N}^{n}r(k) }\\
+        &\leq \bracket{ \sum_{k=1}^{N-1}(n-k) r(0) + \sum_{k=N}^{n} \abs{r(k)} }
+    \end{split}
+\end{equation}
+Now we can substitute \ref{G6} into \ref{G4} to get the following: 
+\begin{equation}
+    \label{G7}
+    \begin{split}
+        E\left[ \frac{S_n^2}{n^2}\right] &\leq \frac{1}{n^2} \bracket{nr(0) + 2\left( \sum_{k=1}^{N-1}(n-k) r(0) + \sum_{k=N}^{n} \abs{r(k)}\right)}\\
+        &\leq \frac{1}{n^2} \bracket{2Nnr(0) + 2\sum_{k=N}^{n} \abs{r(k)}}\\
+        &\leq \frac{2Nr(0)}{n} + \left(1 + \frac{1}{n}\right)\epsilon
+    \end{split}
+\end{equation}
+Using \ref{G7}, we can claim that $E[S_n^2/n^2] \xrightarrow{L^2} 0$, which automatically implies that $E[S_n^2/n^2] \xrightarrow{p} 0$ - Q.E.D
+\newpage
+\section{Problem 2}
+\textbf{Main Idea}: I want to use Theorem 2.2.12 \cite{10.5555/1869916}, for this it is required to prove all prerequisite conditions for using the same. For $x \geq e$, we compute $x P( \abs{X_i} > x)$ as follows: 
+\begin{equation}
+    \label{G8}
+    \begin{split}
+        xP( \abs{X_i} > x) &= xP(X_i > x) + x\highlight{P(X_i < -x)}\\
+        &= xP(X_i > x)\\
+        &= \frac{e}{\ln{x}}
+    \end{split}
+\end{equation}
+The second highlighted term is zero, as $P(X_i > e) = 1$, which suggests that $P(X_i \leq e ) = 0$. From \ref{G8} it is clear that as $x \rightarrow \infty$, we have $xP( \abs{X_i} > x) \rightarrow 0$, then we can define $\mu_n = X_1\mathbf{1}_{\abs{X_1}\leq n}$ ; then we can conclude that $S_n/n - \mu_n \xrightarrow{p} 0$ Theorem 2.2.12 \cite{10.5555/1869916}. We also need to show that $E\abs{X_i} = \infty$, 
+\begin{equation}
+    \label{G9}
+    \begin{split}
+        E\abs{X_i} &= EX_i \\
+        &\geq \highlight{\mu_n}
+    \end{split}
+\end{equation}
+From \ref{G9}, it suffices to show that as $n \rightarrow \infty$, $\mu_n \rightarrow \infty$, which we can do using  \ref{G8} as follows: 
+\printbibliography
 \end{document}
