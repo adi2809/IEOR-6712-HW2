@@ -43,8 +43,12 @@
 \newcommand{\bracket}[1]{\left(#1\right)}
 \newcommand{\highlight}[1]{%
   \colorbox{red!20}{$\displaystyle#1$}}
+  \newcommand{\highlighty}[1]{%
+  \colorbox{yellow!20}{$\displaystyle#1$}}
 \newcommand{\abs}[1]{\vert \, #1 \, \vert}
 \newcommand{\magn}[1]{\vert\vert \, #1 \, \vert\vert}
+\newcommand\aseq{\stackrel{\mathclap{\normalfont\mbox{a.s.}}}{=}}
+\newcommand{\converge}[1]{\xrightarrow{#1}}
 \addbibresource{citations.bib}
 \title{Assignment 2}
 \date{October 2023}
@@ -136,5 +140,252 @@ From \ref{G9}, it suffices to show that as $n \rightarrow \infty$, $\mu_n \right
         &= \infty
     \end{split}
 \end{equation}
+\newpage 
+\section{Problem 3}
+\textbf{Main Idea:} As the question explicitly states 'triangular arrays' I want to use Theorem 2.2.11 \cite{10.5555/1869916} to prove the necessary results, Hence we need to check all the prerequisite conditions for that to happen. 
+\begin{tcolorbox}[title = Theorem 2.2.11 - Weak Law for Triangular Arrays, ]
+    For each $n$ let $X_{n, k}$, $1 \leq k \leq n$, be independent. Let $b_n > 0$, with $b_n \rightarrow \infty$, and let $\overline{X}_{n, k} = X_{n, k}\mathbf{1}_{|X_{n, k}|\leq b_n}$. Suppose that as $n \rightarrow \infty$
+    \begin{enumerate}
+        \item $\sum_{k=1}^{n} P(|X_{n, k}| > b_n) \rightarrow 0$, and 
+        \item $b_n^{-2} \sum_{k=1}^{n} E\overline{X}_{n, k}^2 \rightarrow 0$
+    \end{enumerate}
+    Then if we define $S_n = \sum_{i=1}^{n} X_{n, i}$ and put $a_n = \sum_{k=1}^{n} E\overline{X}_{n, k}$, then 
+    \begin{align*}
+        \frac{S_n-a_n}{b_n} \xrightarrow{p} 0
+    \end{align*}
+\end{tcolorbox}
+\noindent We set $X_{n, k} = X_k$ for all $k \in [n]$, $b_n = 2^{m(n)}$, where $m(n) = \min\{m \, :\, 2^{-m} m^{-3/2} \leq  n^{-1}\}$
+\begin{itemize}
+    \item $b_n > 0$, trivially true. 
+    \item $\lim b_n = \lim 2^{m(n)} = \infty$ ( note that the as $n \rightarrow \infty$, $1/n \rightarrow 0$, the rest follows from this ) 
+    \item We need to check that $\sum_{k=1}^n P(|X_{n, k}| > b_n) \rightarrow 0$, we know that $X_1$, $X_2, \dots$ are i.i.d and $X_{n, k} = X_k, \, \forall \, k\in[n]$
+    \item[] \begin{itemize}
+                \begin{equation}
+                    \label{G11}
+                    \begin{split}
+                        \sum_{k=1}^n P(|X_{n, k}| > b_n) &= nP(|X_1| > 2^{m(n)})\\
+                        &= n \sum_{k = m(n) + 1}^\infty p_k\\
+                        &= \sum_{k = m(n) + 1}^\infty \frac{n}{2^k k (k+1)}\\
+                        &\leq  \sum_{k = m(n) + 1}^\infty \frac{n}{2^k m(n)^2}\\
+                        &\leq \frac{n}{2^{m(n)} m(n)^{3/2} \cdot m(n)^{1/2}}\\ 
+                        &\leq m(n)^{-1/2} \rightarrow 0 
+                    \end{split}
+                \end{equation}
+            \end{itemize}
+    \item We need to check that $b_n^{-2}\sum_{k=1}^{n} \overline{X}^2_{n, k} \rightarrow 0$
+    \item[] \begin{itemize}
+                \begin{equation}
+                    \label{G12}
+                    \begin{split}
+                        b_n^{-2}\sum_{k=1}^{n} \overline{X}^2_{n, k} &= \frac{n}{2^{2m(n)}} E\left[X_1^2 \mathbf{1}_{\{|X_1| \leq 2^{m(n)}\}}\right]\\
+                        &= \frac{n}{2^{m(n)}2^{m(n)}} E\left[X_1^2 \mathbf{1}_{\{|X_1| \leq 2^{m(n)}\}}\right]\\
+                        &\leq \frac{m(n)^{3/2}}{2^{m(n)}} E\left[X_1^2 \mathbf{1}_{\{|X_1| \leq 2^{m(n)}\}}\right]\\
+                        &\leq \frac{m(n)^{3/2}}{2^{m(n)}} \bracket{ \sum_{k=1}^{m(n)} (2^k -1)^2 p_k + p_0}\\
+                        &\leq  \frac{m(n)^{3/2}}{2^{m(n)}} \bracket{ 1 + \sum_{k=1}^{m(n)} 2^{2k} p_k }\\
+                        &\leq  \frac{m(n)^{3/2}}{2^{m(n)}}\bracket{ 1 + \highlight{\sum_{k=1}^{m(n)} \frac{2^{k}}{k(k+1)}  }}
+                    \end{split}
+                \end{equation}
+            \end{itemize}
+    \item In \ref{G12}, we moved from line-2 to line-3 using definition of $m(n)$, from line-3 to line-4 by explicitly computing the expectation, from line-4 to line-5 using the fact that $2^k > 2^{k}-1$ and definition of $p_0$, and line-5 to line-6  by using the definition of $p_k$
+    \item[] \begin{itemize}
+                \begin{equation}
+                    \label{G13}
+                    \begin{split}
+                        \sum_{k=1}^{m(n)} \frac{2^{k}}{k(k+1)} &=  \sum_{k=1}^{m(n)/2-1} \frac{2^{k}}{k(k+1)} +  \sum_{k=m(n)/2}^{m(n)} \frac{2^{k}}{k(k+1)}\\
+                        &\leq \sum_{k=1}^{m(n)/2-1} 2^k +  \sum_{k=m(n)/2}^{m(n)} \frac{2^{k}}{k(k+1)}\\
+                        &\leq 2^{m(n)/2+1} - 2 +  \sum_{k=m(n)/2}^{m(n)} \frac{2^{k}}{k(k+1)}\\
+                        &\leq (2^{m(n)/2+1} - 2) + \frac{1}{\frac{m(n)}{2} \left(\frac{m(n)}{2} + 1\right)} (2^{m(n)+1} - 2^{m(n)/2+1})\\
+                        &\leq C \frac{2^{m(n)}}{m(n)^2}
+                    \end{split}
+                \end{equation}
+            \end{itemize}
+    \item In \ref{G13}, we can see that the summation is divergent as $n\rightarrow \infty$ to obtain a bound we split the sum into two halves, for each part we can approximate the product of $k(k+1)$ using the lower limit of the summation and use the sum of geometric-progression. For sufficiently large $n$, we can conclude that the summation is $\mathcal{O}(2^{m(n)}/m(n)^2)$. 
+    \item If we plug \ref{G13}, into \ref{G12} we can conclude $b_n^{-2}\sum_{k=1}^{n} \overline{X}^2_{n, k} \rightarrow 0$. 
+    \item We can use theorem 2.2.11 to show convergence in probability. As $a_n = \sum_{k=1}^{n} E\overline{X}_{n, k}$
+    \item[] \begin{itemize}
+                \begin{equation}
+                    \label{G14}
+                    \begin{split}
+                        a_n &= \sum_{k=1}^{n} E\overline{X}_{n, k}\\
+                        &= n E\left[X_1 \mathbf{1}_{\{|X_1|\leq 2^{m(n)}\}}\right]\\
+                        &= n\bracket{-\frac{1}{m(n) + 1 } + \sum_{m(n)+1}^{\infty} \frac{1}{2^k k (k+1)}}\\
+                        &\leq n\bracket{-\frac{1}{m(n) + 1 } + \frac{1}{m(n)^2}\sum_{m(n)+1}^{\infty} \frac{1}{2^k}}\\
+                        &\simeq \frac{n}{\log{n}}
+                    \end{split}
+                \end{equation}
+            \end{itemize}
+    \item If we substitute this into the theorem 2.2.11, we can conclude that $S_n/(n/\log{n}) \xrightarrow{p} 0$
+\end{itemize}
+\newpage 
+\section{Problem 4}
+To show that $\limsup{X_n/\log{n}} \aseq 1$, 
+For any $\epsilon > 0$, we need to show that $P(X_n/\log{n} > 1 + \epsilon) = 0$. We are given that $P(X > x) = e^{-x}$, hence using this yields the following:
+\begin{equation}
+    \label{G60}
+    \begin{split}
+        P(X_n/\log{n} > 1 + \epsilon) &= P(X_n > \log{n^{1+\epsilon}})\\
+        &= \frac{1}{n^{1+\epsilon}}
+    \end{split}
+\end{equation}
+Using \ref{G60}, we sum up $P(X_n/\log{n} > 1 + \epsilon)$ for all $n \in \mathbb{N}$. (we just conclude that the series is convergent using elementary integral-test from real-analysis).
+\begin{equation*}
+    \sum_{n \in \mathbb{N}} P(X_n/\log{n} > 1 + \epsilon) < +\infty
+\end{equation*}
+By Borel-Cantelli Lemma-1, we can conclude that $P\left(X_n > (1 + \epsilon) \log{n}, \,\, \text{i.o.} \right) = 0$, and we can conclude that $\limsup{X_n/\log{n}} \leq 1$ almost surely. To show that  $\limsup{X_n/\log{n}} \geq 1$, it is sufficient that we show that $P\left(X_n >  \log{n}, \, \, \text{i.o.}\right) = 1$, we are given that $X_n$'s are independent hence, 
+\begin{equation*}
+    \sum_{n \in \mathbb{N}} P(X_n/ >\log{n}) = +\infty
+\end{equation*}
+By Borel-Cantelli Lemma-2, we can conclude that $P\left(X_n >  \log{n}, \, \, \text{i.o.}\right) = 1$.\\\\
+To show that $ {M_n/\log{n}} \converge{a.s.} 1$, we can equivalently show that $\liminf{{M_n/\log{n}}} \geq 1$ and $\limsup{{M_n/\log{n}}} \leq 1$. 
+\begin{itemize}
+    \item To show that $\liminf{{M_n/\log{n}}} \geq 1$, it is sufficient to prove that $P({M_n/\log{n}} < 1-\epsilon, \, \, \text{i.o.}) = 0$ for every $\epsilon > 0$
+    \item[] \begin{equation}
+                \begin{split}
+                    P\bracket{\frac{M_n}{\log{n}} < 1-\epsilon} &= P\bracket{\max_{m\in[n]} X_m < \log{n^{1-\epsilon}}}\\
+                    &= \prod_{m\in[n]}P\bracket{X_m < \log{n^{1-\epsilon}}}\\
+                    &= \prod_{m\in[n]}\left(1 - P\bracket{X_m > \log{n^{1-\epsilon}}}\right)\\
+                    &= \prod_{m\in[n]}\left(1 - \frac{1}{n^{1-\epsilon}}\right)\\
+                    &= \left(1 - \frac{1}{n^{1-\epsilon}}\right)^n\\
+                    &\leq e^{-n^\epsilon}
+                \end{split}
+            \end{equation}
+    \item[] In the above equation we have used taylor-series expansion of $\ln{(1-x)} = -x - x^2/2 + \dots$. 
+    \item To use Borel-Cantelli lemma, we need to bound the $ \sum P(M_n/\log{n} < 1-\epsilon)$, hence : 
+    \item[] \begin{equation}
+                \sum P(M_n/\log{n} < 1-\epsilon) \leq \sum e^{-n^\epsilon} < \infty
+            \end{equation}
+    \item Hence, by Borel-Cantelli lemma, we have $P({M_n/\log{n}} < 1-\epsilon, \, \, \text{i.o.}) = 0$. 
+    \item To show that $\limsup{{M_n/\log{n}}} \leq 1$, it is sufficient to prove that $P({M_n/\log{n}} < 1+\epsilon, \, \, \text{eventually}) = 0$ for every $\epsilon > 0$:
+    \item[] \begin{itemize}
+                \item From part-1 of the problem we know that $P(\{\omega : \limsup{X_n(w)/\log{n}} = 1\}) = 1$, if we somehow show that $ A = \{\omega : \limsup{X_n(w)/\log{n}} = 1\} \subset B = \{\omega : M_n(\omega)/\log{n} < 1 + \epsilon\}$, then we are done. 
+                \item For every $\oemga \in A$, we know that there exists a $N(\omega) \in \mathbb{N}$, such that: 
+                \item[] \begin{equation*}
+                            \forall n \geq N(\omega), \, \, \, \, \frac{X_n(\omega)}{\log{n}} < 1 + \varepsilon
+                        \end{equation*}
+                \item[] \begin{equation*}
+                            \begin{array}{lrl}
+                                \forall n \geq N(\omega)&\frac{M_n(\omega)}{\log{n}} &= \max_{1\leq m \leq n} \frac{X_n(\omega)}{\log{n}}\\\\
+                                & &= \max\left\{\highlighty{\max_{1\leq m \leq N(\omega)} \frac{X_m(\omega)}{\log{n}}}, \, \highlight{\max_{N(\omega)\leq m \leq n} \frac{X_n(\omega)}{\log{n}}}\right\}
+                            \end{array}
+                        \end{equation*}
+                \item For the expression in \textcolor{yellow}{yellow}, cannot directly use the definition of $A$, but we can definitely claim that there exists a $N'(\omega)$, such that $X_m(\omega)/\log{n} < 1 + \varepsilon$ for all $n > N'(\omega)$. 
+                \item For the expression in \textcolor{red}{red}, we can directly use the definition of set $A$. Finally, for all $n > \max\{N, N'\}$, we have the following, 
+                \item[] \begin{equation*}
+                            \frac{M_n}{\log{n}} < 1 + \varepsilon
+                        \end{equation*}
+                \item Using the above equation we can say that $A \subset B$, which implies that $P(A) \leq P(B)$, but since $P(B)\in[0, 1]$ and $P(A) = 1$, we conclude that $P(B) = 1$. Which proves the required argument. 
+            \end{itemize}
+
+\end{itemize}
+\newpage
+\section{Problem 5}
+We are given $\{X_i\}$ is a random variable that gives the working-time of a bulb, and $\{Y_i\}$ is the time it takes to replace a bulb after it stops working. Hence we define a new sequence $\{Z_i\}$, signifying the total life of a bulb (i.e. - till the time it was installed to the time it was replaced). It can be seen that $Z_i = X_i + Y_i$. The total-life of the bulbs (up to $n$-replacements) can be given by a random variable $T_n$, 
+\begin{equation}
+    \label{G15}
+    \begin{split}
+        T_n &= (X_1 + Y_1) + (X_2 + Y_2) + \dots + (X_n + Y_n) \\
+        &= Z_1 + Z_2 + \dots + Z_n\\
+        &= \sum_{i=1}^{n} Z_i
+    \end{split}
+\end{equation}
+Depending upon $T_n$, we can define an auxiliary variable $N_t = \min \{n : \, T_n \leq t\}$, which denotes number of bulbs used up to time $t$. As $t\rightarrow\infty$, we can see that $N_t \rightarrow \infty$. Using $N_t$, we can bound $R_t$ (as it cannot be less than on-time of $N_t$ bulbs and it cannot be more than $t$ minus the off-time of $N_t$ bulbs), as follows: 
+\begin{equation}
+    \label{G16}
+    \begin{array}{crlr}
+        &&&\\\\
+        & \sum_{i=1}^{N_t} X_t &\leq R_t &\leq t - \sum_{i=1}^{N_t} Y_t \\\\
+        \implies&  \frac{\sum_{i=1}^{N_t} X_t}{t} &\leq \frac{R_t}{t} &\leq 1 - \frac{\sum_{i=1}^{N_t} Y_t}{t}
+    \end{array}
+\end{equation}
+As $X_i$'s, $Y_i$'s are pairwise independent and identically distributed events and $N_t \rightarrow \infty$ as $t\rightarrow \infty$, we can use the statement of SLLN \cite{10.5555/1869916} to conclude the following: 
+\begin{itemize}
+    \item $\sum_{i=1}^{N_t} X_i / N_t \xrightarrow{a.s.} E[X_1]$ and, 
+    \item $\sum_{i=1}^{N_t} Y_i / N_t \xrightarrow{a.s.} E[Y_1]$
+\end{itemize}
+Using the definition of $T_n$, $N_t$ we can also use Theorem 2.4.7 \cite{10.5555/1869916} and linearity of expectation operator, and conclude the following: 
+\begin{itemize}
+    \item $N_{t}/t \xrightarrow{a.s.} 1/(E[X_1] + E[Y_1])$
+\end{itemize}
+If we revisit \ref{G16}, and use the convergence relations above, we arrive at: 
+\begin{equation}
+    \label{G17}
+    \begin{array}{cccc}
+         & \frac{\sum_{i=1}^{N_t} X_t}{N_t} \frac{N_t}{t}&\leq \frac{R_t}{t} &\leq 1 - \frac{\sum_{i=1}^{N_t} Y_t}{N_t} \frac{N_t}{t}\\
+         
+    \end{array}
+\end{equation}
+\begin{equation}
+    \label{G18}
+    \frac{R_t}{t}\xrightarrow{a.s.} \frac{E[X_1]}{E[X_1] + E[Y_1]}
+\end{equation}
+\textbf{Claim-1:} Let $X_n$ and $X'_n$ be two random variables converging almost surely to $X$ and $Z_n$ be a random variable such that $X_n \leq Z_n \leq X'_n$. Then $Z_n$ also converges almost surely to $X$. \\\\
+\textit{proof}: The event $\{Z_n \to X\}$ is a superset of $\{X_n \to X\} \cap \{X'_n \to X\} \cap \{X'_n \leq Z_n \leq X_n\}$. This intersection has probability $1$, since the complement of this intersection has probability (here, $A = \{X_n \to X\}^c$, $B = \{X'_n \to X\}^c$, $ C =\{X'_n \le Z_n \le X_n\}^c$) , 
+\begin{multline*}
+    P( A\cup  B\cup C)
+\le (1-P(X_n \to X)) +\\ (1-P(X'_n\to X)) +\\ (1-P(X'_n \le Z_n \le X_n)) = 0
+\end{multline*}
+Thus $P(Z_n \to X)=1$ as well.\\\\
+Using claim-1, continuous mapping theorem, and \ref{G17}, we arrive at \ref{G18}. 
+\newpage 
+\section{Problem 6}
+We can define a new variable $Y_n$ as follows, 
+\begin{equation}
+    \label{G19}
+    Y_{n+1} = \frac{X_{n+1}}{||X_n||}
+\end{equation}
+We have been given the distribution of $Y_n$, and we know that it is independent of $X_1$, $X_2$, $\dots$, $X_n$. We consider the expression $\ln{||X_n||}/n$, as given in the problem, and rewrite it as: 
+\begin{equation}
+    \label{G20}
+    \begin{split}
+        \frac{\ln{||X_n||}}{n} &= \frac{\ln{\prod_{i=1}^{n}||Y_i||}}{n}\\
+        &= \frac{\sum_{i=1}^{n} \ln{||Y_i||}}{n}
+    \end{split}
+\end{equation}
+We know that $||Y_i||$ also forms an i.i.d sequence, so using strong law of large numbers we can conclude that $\ln{||X_n||}/n$ converges to $E[\ln{||Y_i||}]$, whenever the logarithm exists.\\\\
+\textbf{Computation of Expectation}: Here we obtain a more general result, for a d-dimensional ball. At the end we just need to put $d=2$, to obtain the solution to our problem. 
+\begin{equation}
+    \label{G21}
+    \begin{split}
+        E[\ln{||Y||}] &= \int_{B(0, 1)} \frac{1}{\pi} \ln{||y||} dy\\
+        &= \int_{0}^{1} \int_{S_r}  \frac{1}{\pi} \ln{r} dS_r dr\\
+        &= \int_{0}^{1} \frac{2\pi^{\frac{d}{2}-1}}{\Gamma(d/2)} r^{d-1} \ln{r} dr\\
+        &= \frac{-2\pi^{(d/2)-1}}{\Gamma(d/2)d^2}
+    \end{split}
+\end{equation}
+In \ref{G21}, we use $S_r$ to denote a d-dimensional shell of radius $r$ centered at the origin and use integration by parts to compute the result. For the case where $d=2$, \ref{G21}, changes to the following: 
+\begin{equation}
+    \label{G22}
+    \begin{split}
+        E[\ln{||Y||}] &= \frac{-2\pi^{0}}{4\Gamma(1)}\\
+        &= -\frac{1}{2}
+    \end{split}
+\end{equation}
+\newpage 
+\section{Problem 7}
+\textbf{Main Idea}: We need to prove convergence in distribution of $X_n^i$ to the standard normal. We first use the hint given to establish that convergence in distribution for $X_n^i$ and $Y_i/(\sum Y_i^2 /n)^\frac{1}{2}$ and then prove that $Y_i/(\sum Y_i^2 /n)^\frac{1}{2} \sim N(0, 1)$\\\\
+Since $Y_i \sim N(0,1)$ and $Y_i$'s are i.i.d the random vector $Y = (Y_1, Y_2, \dots, Y_n) \sim N(0, I_n)$. We claim that for every orthogonal matrix $A$, $AY \sim N(0, I_n)$.\\\\
+\textit{proof}: $AY = (Z_1, Z_2, \dots, Z_n)$, here $Z_i = \sum a_{ki} Y_k$, which is a sum of $n$ standard normals. Hence it has a zero mean, and variance 1 (orthogonal matrix has unit-norm columns). To get the covariance of $Z_i$ and $Z_j$, we use the property that two columns of $A$ are orthogonal to each other. Hence we have proved the claim. We can assert that, \\\\
+\[
+\frac{Y}{||Y||} \stackrel{\mathclap{\normalfont\mbox{d}}}{\equiv} \frac{AY}{||AY||}
+\]
+Hence as $Y/||Y||$ is invariant to rotations, it is uniformly distributed over a unit-sphere (still not sure if this is correct, how can we prove that uniform distribution over a sphere is the only invariant distribution that belongs to the sphere, but assuming this fact proves the rest easily). Then $X_n \stackrel{\mathclap{\normalfont\mbox{d}}}{\equiv} \sqrt{n}Y/||Y||$, which is what we wanted to prove for the first part. \\\\
+Now we want to prove that $\sqrt{n}Y/||Y|| \stackrel{\mathclap{\normalfont\mbox{d}}}{\rightarrow} N(0, 1)$; As $Y_i$'s are standard normal with finite second moment, we can use the weak law of large numbers, 
+\[
+\sum_{i=1}^{n} \frac{Y_i^2}{n} \xrightarrow{p} 1
+\]
+We know that convergence in probability implies convergence in distribution hence $\sum_{i=1}^{n} \frac{Y_i^2}{n} \Rightarrow 1$. We now show that $\left(\sum_{i=1}^{n} \frac{Y_i^2}{n}\right)^{-1/2} \Rightarrow 1$, which follows from continuous mapping theorem on $g(x) = 1/\sqrt{x}$. 
+\[
+\left(\sum_{i=1}^{n} \frac{Y_i^2}{n}\right)^{-1/2} \Rightarrow 1
+\]
+Since $\left(\sum_{i=1}^{n} \frac{Y_i^2}{n}\right)^{-1/2} \Rightarrow 1$ and $Y_i \Rightarrow N(0, 1)$, then consider their product $Z_i = Y_i\left(\sum_{i=1}^{n} \frac{Y_i^2}{n}\right)^{-1/2}$, we need to show that $Z_i \Rightarrow N(0, 1)$ ; 
+Since $Y_i \Rightarrow N(0, 1)$, we have $P(Y_i \leq y) \implies P(N(0, 1) \leq y)$ and $B_n = \left(\sum_{i=1}^{n} \frac{Y_i^2}{n}\right)^{-1/2} \xrightarrow{p} 1$, $P(|B_n - 1| > \epsilon), \, \, \forall \epsilon > 0$. 
+\begin{enumerate}
+    \item $P(Z_i \leq z) = P(Y_i B_i \leq z, \, |B_n -1|\leq \epsilon) + P(Y_i B_i \leq z, \, |B_i -1| > \epsilon) \leq P(Y_i \leq z/(1-\epsilon)) + P(|Y_i-1|>\epsilon)$, if we let,  $z/(1-\epsilon)$ lies in the set of continuity points of cdf of $N(0, 1)$, we can conclude that 
+    \[
+    \limsup{P(Z_i \leq z)} \leq P(N(0, 1) \leq \frac{z}{1-\epsilon}). 
+    \]
+    If we set $\epsilon \rightarrow 0$, $\limsup{P(Z_i \leq z)} \leq P(N(0, 1) \leq z) = CDF_{N(0, 1)}(z)$.  We can show the other side similarly and conclude that $Z_i \Rightarrow N(0, 1)$. This completes the proof. 
+\end{enumerate}
+\newpage 
 \printbibliography
 \end{document}
